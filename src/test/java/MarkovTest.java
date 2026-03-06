@@ -1,11 +1,4 @@
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import org.junit.jupiter.api.AfterAll;
@@ -13,6 +6,8 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 class MarkovTest {
 
@@ -78,7 +73,7 @@ class MarkovTest {
      * Since getWords is one of the chunkiest piece of code, it has a lot of tests.
      */
     @Test
-    void getWords() {
+    void getWords() throws FileNotFoundException {
         markov.addFromFile(HELLO_THERE);
         hashMapTester = markov.getWords();
         System.out.println("Testing getWords");
@@ -94,7 +89,7 @@ class MarkovTest {
     }
 
     @Test
-    void getSentence() {
+    void getSentence() throws FileNotFoundException {
         markov.addFromFile(HELLO_THERE);
         assertEquals(TEST_SENTENCE, markov.getSentence());
     }
@@ -121,7 +116,7 @@ class MarkovTest {
      * If we have a set of known knowns, we can easily test though.
      */
     @Test
-    void randomWord() {
+    void randomWord() throws FileNotFoundException {
         markov.addFromFile(HELLO_THERE);
         assertEquals("Hello", markov.randomWord(PUNCTUATION));
         assertEquals("there.", markov.randomWord("Hello"));
@@ -150,7 +145,7 @@ class MarkovTest {
      * Essentially FORCE a certain sentence.
      */
     @Test
-    void toStringTest() {
+    void toStringTest() throws FileNotFoundException {
         assertEquals(EMPTY_HASHMAP, markov.toString());
         markov.addFromFile(HELLO_THERE);
 //        for(int i = 0; i < 1000; i++) {
