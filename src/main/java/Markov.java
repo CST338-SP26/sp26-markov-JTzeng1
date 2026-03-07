@@ -18,6 +18,7 @@ public class Markov {
         words  = new HashMap<>();
         words.put(BEGINS_SENTENCE, new ArrayList<>());
 
+
     }
 
     public String getSentence() {
@@ -43,6 +44,21 @@ public class Markov {
     }
 
     public void addWord(String word) {
+        if(word.isEmpty()) {
+            return;
+        }
+        String key;
+        if(endsWithPunctuation(prevWord)) {
+            key = BEGINS_SENTENCE;
+        } else {
+            key = prevWord;
+
+        }
+        if(!words.containsKey(key)) {
+            words.put(key, new ArrayList<>());
+        }
+        words.get(key).add(word);
+        prevWord = word;
     }
 
     public String randomWord(String key) {
@@ -58,6 +74,20 @@ public class Markov {
     }
 
     public void addLine(String line) {
+        if(line.isEmpty()){
+            return;
+        }
+
+        String [] parts = line.split(" ");
+        for(String word : parts){
+
+            word = word.trim();
+            if(!word.isEmpty()) {
+                addWord(word);
+            }
+
+        }
+
 
     }
 
@@ -72,7 +102,7 @@ public class Markov {
             }
             return false;
         } catch (Exception e) {
-            System.out.println("Error checking Punctuation in sentence" + words);
+            System.out.println("Error checking Punctuation in words" + words);
             return false;
         }
     }
