@@ -11,7 +11,7 @@ public class Main {
         markov.addFromFile("twok.txt");
 
         System.out.println(markov);
-        for (int i = 0; i < 150; i ++){
+        for (int i = 0; i < 10; i ++){
             System.out.println(markov.getSentence());
         }
     }
