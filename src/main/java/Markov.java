@@ -1,14 +1,15 @@
 import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.util.ArrayList;
 import java.util.HashMap;
-
+import java.util.Scanner;
 
 
 public class Markov {
     public static final String BEGINS_SENTENCE = "__$";
     private String prevWord;
     private HashMap<String, ArrayList<String>> words;
-    private static String PUNCTUATION_MARKS =  ".!?$";
+    private static final String PUNCTUATION_MARKS =  ".!?$";
 
     public Markov() {
         //The constructor for this class will initialize the HashMap words with the key BEGINS_SENTENCE and a value of a new ArrayList.
@@ -23,7 +24,21 @@ public class Markov {
         return prevWord;
     }
 
-    public void addFromFile(String filename) {
+    public void addFromFile(String filename) throws FileNotFoundException {
+        try{
+            FileReader file = new FileReader(filename);
+            Scanner fileScanner = new Scanner(file);
+
+            while(fileScanner.hasNextLine()) {
+                String line = fileScanner.nextLine();
+                addLine(line);
+            }
+
+
+        } catch(FileNotFoundException e) {
+            System.out.println("File not found");
+        }
+
 
     }
 
@@ -46,8 +61,20 @@ public class Markov {
 
     }
 
-    public static boolean endsWithPunctuation(String sentence) {
-        return sentence.contains(PUNCTUATION_MARKS);
+    public static boolean endsWithPunctuation(String words) {
+        try {
+            char lastChar = words.charAt(words.length()-1);
+
+            for (int i = 0; PUNCTUATION_MARKS.length() > i; i++) {
+                if(lastChar == PUNCTUATION_MARKS.charAt(i)){
+                    return true;
+                }
+            }
+            return false;
+        } catch (Exception e) {
+            System.out.println("Error checking Punctuation in sentence" + words);
+            return false;
+        }
     }
 
 }
