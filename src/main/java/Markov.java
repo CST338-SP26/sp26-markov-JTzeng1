@@ -2,9 +2,18 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Random;
 import java.util.Scanner;
 
+/*
+Title: Markov
+Abstract: The program creates random sentences using a Markov chain by reading words
+from a file and storing them in a HashMap that tracks which words follow each other.
+It then generates sentences by randomly selecting words until a word ending with punctuation is reached.
+Author: Justin Tzeng;
+Date: 03/10/2026
 
+ */
 public class Markov {
     public static final String BEGINS_SENTENCE = "__$";
     private String prevWord;
@@ -22,19 +31,34 @@ public class Markov {
     }
 
     public String getSentence() {
-        return prevWord;
+        StringBuilder sentence = new StringBuilder();
+        String currentWord = randomWord(BEGINS_SENTENCE);
+
+        while (true) {
+            sentence.append(currentWord);
+
+            if (endsWithPunctuation(currentWord)) {
+                break;
+
+            }
+            sentence.append(" ");
+            currentWord = randomWord(currentWord);
+
+
+        }
+        return sentence.toString();
+
     }
 
     public void addFromFile(String filename) throws FileNotFoundException {
         try{
             FileReader file = new FileReader(filename);
-            Scanner fileScanner = new Scanner(file);
+            Scanner scanFile = new Scanner(file);
 
-            while(fileScanner.hasNextLine()) {
-                String line = fileScanner.nextLine();
+            while(scanFile.hasNextLine()) {
+                String line = scanFile.nextLine();
                 addLine(line);
             }
-
 
         } catch(FileNotFoundException e) {
             System.out.println("File not found");
@@ -62,26 +86,30 @@ public class Markov {
     }
 
     public String randomWord(String key) {
-        return this.words.get(key).get(0);
+        ArrayList<String> WordList = words.get(key);
+        Random random = new Random();
+        int randomizer = random.nextInt(WordList.size());
+        return WordList.get(randomizer);
+
     }
 
     public String toString(){
-        return this.getSentence();
+        return words.toString();
     }
 
     public HashMap<String, ArrayList<String>> getWords() {
         return words;
     }
 
-    public void addLine(String line) {
+    public void addLine(String line)  {
         if(line.isEmpty()){
             return;
         }
+        String [] wordSplitter = line.split(" ");
 
-        String [] parts = line.split(" ");
-        for(String word : parts){
+        for (int i = 0; i < wordSplitter.length; i++) {
+            String word = wordSplitter[i].trim();
 
-            word = word.trim();
             if(!word.isEmpty()) {
                 addWord(word);
             }
@@ -94,13 +122,15 @@ public class Markov {
     public static boolean endsWithPunctuation(String words) {
         try {
             char lastChar = words.charAt(words.length()-1);
-
             for (int i = 0; PUNCTUATION_MARKS.length() > i; i++) {
                 if(lastChar == PUNCTUATION_MARKS.charAt(i)){
                     return true;
+
                 }
             }
             return false;
+
+
         } catch (Exception e) {
             System.out.println("Error checking Punctuation in words" + words);
             return false;
